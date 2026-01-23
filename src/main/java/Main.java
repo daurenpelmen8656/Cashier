@@ -3,10 +3,7 @@ import ui.ConsoleUI;
 
 public class Main {
     public static void main(String[] args) {
-        // Initialize database
-        DatabaseInitializer.initializeDatabase();
-
-        // Start console interface
+        DatabaseInitializer.init();
         ConsoleUI ui = new ConsoleUI();
         ui.start();
     }
