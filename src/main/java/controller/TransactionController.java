@@ -114,7 +114,6 @@ public class TransactionController {
             System.out.printf("Total Expense: $%.2f\n", totalExpense);
             System.out.printf("Balance: $%.2f\n", totalIncome - totalExpense);
 
-            // Business logic: Analyze expenses
             transactionService.analyzeExpenses(year, month);
 
         } catch (Exception e) {

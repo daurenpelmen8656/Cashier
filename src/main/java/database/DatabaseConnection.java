@@ -20,7 +20,6 @@ public class DatabaseConnection {
         try {
             if (connection == null || connection.isClosed()) {
                 connection = DriverManager.getConnection(URL);
-                // Включаем поддержку внешних ключей
                 connection.createStatement().execute("PRAGMA foreign_keys = ON");
             }
         } catch (SQLException e) {

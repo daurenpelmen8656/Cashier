@@ -56,13 +56,11 @@ public class DatabaseInitializer {
             if (conn == null) return;
 
             try (Statement stmt = conn.createStatement()) {
-                // Создаём таблицы
                 System.out.println("Creating tables...");
                 for (String sql : createTables) {
                     stmt.execute(sql);
                 }
 
-                // Проверяем есть ли пользователи
                 String checkUsers = "SELECT COUNT(*) FROM users";
                 ResultSet rs = stmt.executeQuery(checkUsers);
                 if (rs.next() && rs.getInt(1) == 0) {

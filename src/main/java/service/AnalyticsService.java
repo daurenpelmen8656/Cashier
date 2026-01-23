@@ -93,7 +93,6 @@ public class AnalyticsService {
 
         try (Connection conn = DatabaseConnection.getConnection()) {
 
-            // Получаем доходы
             try (PreparedStatement pstmt = conn.prepareStatement(sqlIncome)) {
                 pstmt.setInt(1, userId);
                 ResultSet rs = pstmt.executeQuery();
@@ -102,7 +101,6 @@ public class AnalyticsService {
                 }
             }
 
-            // Получаем расходы
             try (PreparedStatement pstmt = conn.prepareStatement(sqlExpense)) {
                 pstmt.setInt(1, userId);
                 ResultSet rs = pstmt.executeQuery();

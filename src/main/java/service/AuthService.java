@@ -14,7 +14,6 @@ public class AuthService {
         try (Connection conn = DatabaseConnection.getConnection()) {
             if (conn == null) return false;
 
-            // Проверяем, существует ли пользователь
             try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
                 checkStmt.setString(1, username);
                 ResultSet rs = checkStmt.executeQuery();
@@ -24,21 +23,18 @@ public class AuthService {
                 }
             }
 
-            // Регистрируем нового пользователя
             try (PreparedStatement insertStmt = conn.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS)) {
                 insertStmt.setString(1, username);
                 insertStmt.setString(2, password);
                 insertStmt.setString(3, email);
                 insertStmt.executeUpdate();
 
-                // Получаем ID нового пользователя
                 ResultSet generatedKeys = insertStmt.getGeneratedKeys();
                 if (generatedKeys.next()) {
                     currentUserId = generatedKeys.getInt(1);
                     currentUsername = username;
                     System.out.println("✅ Registration successful! User ID: " + currentUserId);
 
-                    // Создаём категории по умолчанию для нового пользователя
                     createDefaultCategories(conn, currentUserId);
                     return true;
                 }

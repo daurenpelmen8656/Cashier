@@ -565,7 +565,6 @@ public class ConsoleUI {
                 return ((Integer) categories.get(choice - 1).get("id")).longValue();
             }
         } catch (NumberFormatException e) {
-            // Пропускаем
         }
 
         return null;
