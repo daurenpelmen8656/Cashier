@@ -19,6 +19,7 @@ public class ConsoleUI {
     public void start() {
         System.out.println("=".repeat(50));
         System.out.println("       PERSONAL FINANCE MANAGER v4.0");
+        System.out.println("        (SQLite Portable Version)");
         System.out.println("=".repeat(50));
 
         // Показываем меню авторизации

@@ -27,7 +27,7 @@ public class AuthService {
             // Регистрируем нового пользователя
             try (PreparedStatement insertStmt = conn.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS)) {
                 insertStmt.setString(1, username);
-                insertStmt.setString(2, password); // Без шифрования!
+                insertStmt.setString(2, password);
                 insertStmt.setString(3, email);
                 insertStmt.executeUpdate();
 
@@ -60,7 +60,7 @@ public class AuthService {
 
             if (rs.next()) {
                 String dbPassword = rs.getString("password");
-                if (dbPassword.equals(password)) { // Простое сравнение, без шифрования
+                if (dbPassword.equals(password)) {
                     currentUserId = rs.getInt("id");
                     currentUsername = username;
                     System.out.println("✅ Login successful! Welcome, " + username);
@@ -97,19 +97,16 @@ public class AuthService {
 
     private void createDefaultCategories(Connection conn, int userId) throws SQLException {
         String[] defaultCategories = {
-                "INSERT INTO categories (name, type, user_id) VALUES ('Salary', 'INCOME', ?) ON CONFLICT DO NOTHING",
-                "INSERT INTO categories (name, type, user_id) VALUES ('Freelance', 'INCOME', ?) ON CONFLICT DO NOTHING",
-                "INSERT INTO categories (name, type, user_id) VALUES ('Food', 'EXPENSE', ?) ON CONFLICT DO NOTHING",
-                "INSERT INTO categories (name, type, user_id) VALUES ('Transport', 'EXPENSE', ?) ON CONFLICT DO NOTHING",
-                "INSERT INTO categories (name, type, user_id) VALUES ('Entertainment', 'EXPENSE', ?) ON CONFLICT DO NOTHING"
+                "INSERT OR IGNORE INTO categories (name, type, user_id) VALUES ('Salary', 'INCOME', " + userId + ")",
+                "INSERT OR IGNORE INTO categories (name, type, user_id) VALUES ('Freelance', 'INCOME', " + userId + ")",
+                "INSERT OR IGNORE INTO categories (name, type, user_id) VALUES ('Food', 'EXPENSE', " + userId + ")",
+                "INSERT OR IGNORE INTO categories (name, type, user_id) VALUES ('Transport', 'EXPENSE', " + userId + ")",
+                "INSERT OR IGNORE INTO categories (name, type, user_id) VALUES ('Entertainment', 'EXPENSE', " + userId + ")"
         };
 
         try (Statement stmt = conn.createStatement()) {
             for (String sql : defaultCategories) {
-                try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                    pstmt.setInt(1, userId);
-                    pstmt.executeUpdate();
-                }
+                stmt.execute(sql);
             }
         }
     }

@@ -21,12 +21,12 @@ public class AnalyticsService {
         Map<String, Double> summary = new HashMap<>();
         String sql = """
             SELECT 
-                TO_CHAR(date, 'YYYY-MM') as month,
+                strftime('%Y-%m', date) as month,
                 SUM(CASE WHEN type = 'INCOME' THEN amount ELSE 0 END) as income,
                 SUM(CASE WHEN type = 'EXPENSE' THEN amount ELSE 0 END) as expense
             FROM transactions
-            WHERE user_id = ? AND date >= CURRENT_DATE - INTERVAL '6 months'
-            GROUP BY TO_CHAR(date, 'YYYY-MM')
+            WHERE user_id = ? AND date >= date('now', '-6 months')
+            GROUP BY strftime('%Y-%m', date)
             ORDER BY month DESC
             """;
 
@@ -60,7 +60,7 @@ public class AnalyticsService {
             FROM transactions t
             JOIN categories c ON t.category_id = c.id
             WHERE t.type = 'EXPENSE' AND t.user_id = ? 
-                AND t.date >= DATE_TRUNC('month', CURRENT_DATE)
+                AND t.date >= date('now', 'start of month')
             GROUP BY c.name
             ORDER BY total DESC
             """;

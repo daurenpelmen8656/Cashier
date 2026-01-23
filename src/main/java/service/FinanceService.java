@@ -26,7 +26,7 @@ public class FinanceService {
 
             pstmt.setString(1, type.toUpperCase());
             pstmt.setDouble(2, amount);
-            pstmt.setDate(3, java.sql.Date.valueOf(date));
+            pstmt.setString(3, date.toString());
             pstmt.setString(4, description);
             if (categoryId != null) {
                 pstmt.setLong(5, categoryId);
@@ -36,6 +36,7 @@ public class FinanceService {
             pstmt.setInt(6, userId);
 
             pstmt.executeUpdate();
+            System.out.println("✅ Transaction added!");
         } catch (SQLException e) {
             System.err.println("Error adding transaction: " + e.getMessage());
         }
@@ -66,7 +67,7 @@ public class FinanceService {
                 transaction.put("id", rs.getInt("id"));
                 transaction.put("type", rs.getString("type"));
                 transaction.put("amount", rs.getDouble("amount"));
-                transaction.put("date", rs.getDate("date"));
+                transaction.put("date", rs.getString("date"));
                 transaction.put("description", rs.getString("description"));
                 transaction.put("category", rs.getString("category"));
                 transactions.add(transaction);
@@ -107,7 +108,9 @@ public class FinanceService {
                 pstmt.setObject(i + 1, params.get(i));
             }
             int updated = pstmt.executeUpdate();
-            if (updated == 0) {
+            if (updated > 0) {
+                System.out.println("✅ Transaction updated!");
+            } else {
                 System.out.println("❌ Transaction not found or you don't have permission!");
             }
         } catch (SQLException e) {
@@ -127,7 +130,9 @@ public class FinanceService {
             pstmt.setInt(1, id);
             pstmt.setInt(2, userId);
             int deleted = pstmt.executeUpdate();
-            if (deleted == 0) {
+            if (deleted > 0) {
+                System.out.println("✅ Transaction deleted!");
+            } else {
                 System.out.println("❌ Transaction not found or you don't have permission!");
             }
         } catch (SQLException e) {
@@ -148,6 +153,7 @@ public class FinanceService {
             pstmt.setString(2, type.toUpperCase());
             pstmt.setInt(3, userId);
             pstmt.executeUpdate();
+            System.out.println("✅ Category added!");
         } catch (SQLException e) {
             System.err.println("Error adding category: " + e.getMessage());
         }
@@ -225,9 +231,10 @@ public class FinanceService {
 
             pstmt.setString(1, name);
             pstmt.setDouble(2, targetAmount);
-            pstmt.setDate(3, java.sql.Date.valueOf(targetDate));
+            pstmt.setString(3, targetDate.toString());
             pstmt.setInt(4, userId);
             pstmt.executeUpdate();
+            System.out.println("✅ Goal added!");
         } catch (SQLException e) {
             System.err.println("Error adding goal: " + e.getMessage());
         }
@@ -252,7 +259,7 @@ public class FinanceService {
                 goal.put("name", rs.getString("name"));
                 goal.put("target_amount", rs.getDouble("target_amount"));
                 goal.put("current_amount", rs.getDouble("current_amount"));
-                goal.put("target_date", rs.getDate("target_date"));
+                goal.put("target_date", rs.getString("target_date"));
                 goals.add(goal);
             }
         } catch (SQLException e) {
